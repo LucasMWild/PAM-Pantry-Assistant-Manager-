@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pantry_screen.dart';
 import '../popups/add_food_popup.dart';
+import '../constants.dart';
 
 
 
@@ -11,9 +12,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
+      backgroundColor: appBackgroundColor,
       appBar: AppBar
       (
         title: const Text("Food Expiration Tracker"),
+        backgroundColor: appBackgroundColor,
       ),
       
       body: Center(
