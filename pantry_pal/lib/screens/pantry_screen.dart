@@ -62,18 +62,57 @@ class _PantryScreenState extends State<PantryScreen> {
               borderRadius: BorderRadius.circular(12), // rounded corners
             ),
             child: ListTile(
-              title: Text(food.name),
+              title: Text('${food.name} (x${food.quantity})'),
               subtitle: Text(
                 "Expires: ${food.expirationDate.toLocal().toString().split(' ')[0]} | Cost: \$${food.cost.toStringAsFixed(2)}",
               ),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    pantryList.removeItem(food);
-                  });
-                },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      setState(() {
+                        if (food.quantity > 1) {
+                          food.quantity--;
+                          pantryList.save();
+                        }
+                      });
+                    },
+                  ),
+                  Text(
+                    food.quantity.toString(),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      setState(() {
+                        food.quantity++;
+                        pantryList.save();
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 8), // small space
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    color: Colors.red,
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      setState(() {
+                        pantryList.removeItem(food);
+                      });
+                    },
+                  ),
+                ],
               ),
               onTap: () async {
                 final editedItem = await showDialog<FoodItem>(

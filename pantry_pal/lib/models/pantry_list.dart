@@ -34,6 +34,7 @@ class PantryList {
 
   Future<void> save() async {
     await _saveToPrefs();
+    
   }
 
   Future<void> _saveToPrefs() async {
@@ -42,6 +43,7 @@ class PantryList {
       'name': item.name,
       'expirationDate': item.expirationDate.toIso8601String(),
       'cost': item.cost,
+      'quantity': item.quantity,
     })).toList();
     await prefs.setStringList('pantryList', foodJsonList);
   }
@@ -57,6 +59,7 @@ class PantryList {
           name: jsonMap['name'],
           expirationDate: DateTime.parse(jsonMap['expirationDate']),
           cost: (jsonMap['cost'] as num).toDouble(),
+          quantity: jsonMap['quantity'] ?? 1,
         );
       }).toList());
     }
