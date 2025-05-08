@@ -4,7 +4,7 @@ import '../popups/add_food_popup.dart';
 import '../constants.dart';
 import '../models/pantry_list.dart';
 import '../models/food_item.dart';
-
+import '../notifications/notification_service.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -51,6 +51,7 @@ class HomeScreen extends StatelessWidget {
                   // Add to the PantryList singleton
                   final pantryList = PantryList(); // singleton
                   await pantryList.addItem(result); // use await because addItem saves
+                  await scheduleNotification(result.expirationDate, result.name);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Food item added!')),
                   );

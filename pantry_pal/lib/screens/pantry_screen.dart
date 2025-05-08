@@ -4,6 +4,7 @@ import '../models/pantry_list.dart'; // Import PantryList
 import '../models/food_item.dart';   // Import FoodItem
 import '../popups/edit_food_popup.dart';
 import '../popups/add_food_popup.dart'; // Import your AddFoodPopup
+import '../notifications/notification_service.dart';
 
 class PantryScreen extends StatefulWidget {
   const PantryScreen({super.key});
@@ -33,6 +34,7 @@ class _PantryScreenState extends State<PantryScreen> {
       setState(() {
         pantryList.addItem(result);
       });
+      await scheduleNotification(result.expirationDate, result.name);
     }
   }
 
