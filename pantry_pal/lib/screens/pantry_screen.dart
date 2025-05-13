@@ -4,6 +4,7 @@ import '../models/pantry_list.dart'; // Import PantryList
 import '../models/food_item.dart';   // Import FoodItem
 import '../popups/edit_food_popup.dart';
 import '../popups/add_food_popup.dart'; // Import your AddFoodPopup
+import '../notifications/notification_service.dart';
 
 class PantryScreen extends StatefulWidget {
   const PantryScreen({super.key});
@@ -33,6 +34,7 @@ class _PantryScreenState extends State<PantryScreen> {
       setState(() {
         pantryList.addItem(result);
       });
+      await scheduleNotification(result.expirationDate, result.name);
     }
   }
 
@@ -62,18 +64,57 @@ class _PantryScreenState extends State<PantryScreen> {
               borderRadius: BorderRadius.circular(12), // rounded corners
             ),
             child: ListTile(
-              title: Text(food.name),
+              title: Text('${food.name} (x${food.quantity})'),
               subtitle: Text(
                 "Expires: ${food.expirationDate.toLocal().toString().split(' ')[0]} | Cost: \$${food.cost.toStringAsFixed(2)}",
               ),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    pantryList.removeItem(food);
-                  });
-                },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.remove),
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      setState(() {
+                        if (food.quantity > 1) {
+                          food.quantity--;
+                          pantryList.save();
+                        }
+                      });
+                    },
+                  ),
+                  Text(
+                    food.quantity.toString(),
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      setState(() {
+                        food.quantity++;
+                        pantryList.save();
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 8), // small space
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    color: Colors.red,
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      setState(() {
+                        pantryList.removeItem(food);
+                      });
+                    },
+                  ),
+                ],
               ),
               onTap: () async {
                 final editedItem = await showDialog<FoodItem>(

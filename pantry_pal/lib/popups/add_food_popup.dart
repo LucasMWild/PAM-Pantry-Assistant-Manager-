@@ -14,6 +14,7 @@ class AddFoodPopup extends StatefulWidget {
 class _AddFoodPopupState extends State<AddFoodPopup> {
   final _nameController = TextEditingController();
   final _costController = TextEditingController();
+  final _quantityController = TextEditingController(text: '1');
   DateTime? _selectedDate;
 
   void _pickDate() async {
@@ -45,6 +46,11 @@ class _AddFoodPopupState extends State<AddFoodPopup> {
               controller: _costController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Cost'),
+            ),
+            TextField(
+              controller: _quantityController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Quantity'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
@@ -78,6 +84,7 @@ class _AddFoodPopupState extends State<AddFoodPopup> {
               name: _nameController.text,
               expirationDate: _selectedDate!,
               cost: double.tryParse(_costController.text) ?? 0.0,
+              quantity: int.tryParse(_quantityController.text) ?? 1,
             );
 
             Navigator.of(context).pop(newFoodItem);
